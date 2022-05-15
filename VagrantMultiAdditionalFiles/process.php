@@ -11,11 +11,14 @@ echo $_POST['last'];
 
 $username = 'root';
 $password = 'rootpass';
-$dsn = 'mysql:host=192.168.3.6;dbname=formresponses';
+$dsn1 = 'mysql:host=192.168.3.6;dbname=formresponses';
+$dsn2 = 'mysql:host=192.168.3.7;dbname=formresponses';
 
 try{
-	$db = new PDO($dsn, $username, $password);
-	$result=FALSE;
+	$db1 = new PDO($dsn1, $username, $password);
+	$db2 = new PDO($dsn1, $username, $password);
+	$result1=FALSE;
+	$result2=FALSE;
 
 	if($_POST['first']!=null && $_POST['last']!=null && $_POST['email']!=null)
 	{
@@ -23,13 +26,16 @@ try{
 		$last=filter_var(trim($_POST['last']),FILTER_SANITIZE_SPECIAL_CHARS);
 		$email=filter_var(trim($_POST['email']),FILTER_SANITIZE_EMAIL);
 		if(validSubmission($first,$last,$email))
-			$result=insertInfo($db,$first,$last,$email);
+			$result1=insertInfo($db,$first,$last,$email);
+			$result2=insertInfo($db,$first,$last,$email);
 	}
 
 } catch(PDOException $ex) {
 	echo $ex->getMessage();
 }
 
+# 헤더를 result1 && result2로 변경
+$result = $result1 and $result2
 header('Location: index.php?success='.$result);
 
 
